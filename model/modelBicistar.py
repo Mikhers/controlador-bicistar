@@ -1,6 +1,7 @@
-from sqlalchemy import Table, Column, ForeignKey
+from sqlalchemy import Table, Column, ForeignKey, null
 from config.db import engine, meta_data
 from sqlalchemy.sql.sqltypes import String,Integer, DateTime, DECIMAL
+from datetime import datetime
 
 
 sede = Table('sede', meta_data,
@@ -22,7 +23,7 @@ proveedor = Table('proveedor', meta_data,
 # Definición de la tabla pedidos
 pedidos = Table('pedidos', meta_data,
                     Column('id_pedido', Integer, primary_key=True, autoincrement=True),
-                    Column('fecha_realizado', DateTime),
+                    Column('fecha_realizado', DateTime,default=datetime.now),
                     Column('fecha_llegada', DateTime),
                     Column('estado_pedido', String(20), nullable=False),
                     Column('total_pedido', DECIMAL(10, 2)),
@@ -58,7 +59,7 @@ productos = Table('productos', meta_data,
                     Column('precio_producto', DECIMAL(10, 2)),
                     Column('cantidad_producto', Integer),
                     Column('stock', Integer),
-                    Column('codigo_producto', Integer, nullable=False, unique=True),
+                    Column('codigo_producto', String(50), nullable=False, unique=True),
                     Column('id_categoria_producto', Integer, ForeignKey('categoria_producto.id_categoria_producto'))
 )
 
@@ -89,7 +90,7 @@ clientes = Table('clientes', meta_data,
 servicios = Table('servicios', meta_data,
                     Column('id_servicio', Integer, primary_key=True, autoincrement=True),
                     Column('descripcion_servicio', String(300)),
-                    Column('fecha_servicio', DateTime),
+                    Column('fecha_servicio', DateTime,default=''),
                     Column('precio_servicio', DECIMAL(10,2), nullable=False),
                     Column('id_empleado', Integer, nullable=False),
                     Column('id_categoria_servicio', Integer, ForeignKey('categoria_servicio.id_categoria_servicio', ondelete='CASCADE', onupdate='CASCADE'), nullable=False),
@@ -98,7 +99,7 @@ servicios = Table('servicios', meta_data,
 
 venta = Table('venta', meta_data,
                 Column('id_venta', Integer, primary_key=True, autoincrement=True),
-                Column('fecha_venta', DateTime),
+                Column('fecha_venta', DateTime,default=null),
                 Column('descripcion_venta', String(300)),
                 Column('precio_venta', DECIMAL(10,2), nullable=False),
                 Column('id_empleado', Integer, nullable=False),

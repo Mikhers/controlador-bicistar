@@ -1,3 +1,4 @@
+# from dataclasses import Field
 from pydantic import BaseModel
 from typing import Optional
 from datetime import datetime
@@ -20,12 +21,12 @@ class Proveedor(BaseModel):
 
 class Pedidos(BaseModel):
     id_pedido: Optional[int]
-    fecha_realizado: Optional[datetime]
-    fecha_llegada: Optional[datetime]
+    fecha_realizado: Optional[datetime] = datetime.now()
+    fecha_llegada: datetime
     estado_pedido: str
     total_pedido: float
-    id_sede: Optional[int]
-    id_proveedor: Optional[int]
+    id_sede: int
+    id_proveedor: int
 
 
 class Empleado(BaseModel):
@@ -46,22 +47,22 @@ class CategoriaProducto(BaseModel):
     descripcion_categoria_producto: str
 
 
-class Productos(BaseModel):
+class Productos(BaseModel):      
     id_producto: Optional[int]
     nombre_producto: str
     descripcion_producto: Optional[str]
     precio_producto: float
-    cantidad_producto: Optional[int]
+    cantidad_producto: Optional[int] = 0
     stock: Optional[int]
     codigo_producto: Optional[int]
     id_categoria_producto: Optional[int]
 
-
+    
 class PedidoProducto(BaseModel):
-    id_pedido: Optional[int]
+    id_pedido: int
     id_producto: int
     cantidad_producto: int
-    precio_unitario: int
+    precio_unitario: float
 
 
 class CategoriaServicio(BaseModel):
@@ -83,7 +84,7 @@ class Clientes(BaseModel):
 class Servicios(BaseModel):
     id_servicio: Optional[int]
     descripcion_servicio: Optional[str]
-    fecha_servicio: Optional[datetime]
+    fecha_servicio: Optional[datetime] = datetime.now()
     precio_servicio: float
     id_empleado: int
     id_categoria_servicio: int
@@ -92,7 +93,7 @@ class Servicios(BaseModel):
 
 class Venta(BaseModel):
     id_venta: Optional[int]
-    fecha_venta: Optional[datetime]
+    fecha_venta: Optional[datetime] = datetime.now()
     descripcion_venta: Optional[str]
     precio_venta: float
     id_empleado: int
