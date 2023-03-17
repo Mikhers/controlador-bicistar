@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Response
 from starlette.status import HTTP_201_CREATED
-from schema.schemaTablas import Sede, Proveedor, Pedidos, Empleado, CategoriaProducto, Productos, PedidoProducto, CategoriaServicio
-from model.modelBicistar  import sede, proveedor, pedidos, empleado, categoria_producto, productos, pedido_producto, categoria_servicio
+from schema.schemaTablas import Sede, Proveedor, Pedidos, Empleado, CategoriaProducto, Productos, PedidoProducto, CategoriaServicio, Clientes, Servicios, Venta
+from model.modelBicistar  import sede, proveedor, pedidos, empleado, categoria_producto, productos, pedido_producto, categoria_servicio, clientes, servicios, venta
 from config.db import engine
 from typing import List
 
@@ -80,13 +80,39 @@ def allPedidoProducto():
             (registro[0], registro[1], registro[2], float(registro[3]))
             )) for registro in result]))
 #=======================================================CategoriaServicio================================================================
-@bicistar.get("/ver-categoria-servicio",tags=["pedido-producto"], response_model=List[CategoriaServicio])
+@bicistar.get("/ver-categoria-servicio",tags=["categoria-servicio"], response_model=List[CategoriaServicio])
 def allCategoriaServicio():
     with engine.connect() as conn:
         result = conn.execute(categoria_servicio.select()).fetchall()
         return json.loads(json.dumps([dict(zip(
             ('id_categoria_servicio', 'nombre_servicio', 'descripcion_servicio'),
             registro)) for registro in result]))
+#=======================================================CategoriaServicio================================================================
+@bicistar.get("/ver-clientes",tags=["Clientes"], response_model=List[Clientes])
+def allClientes():
+    with engine.connect() as conn:
+        result = conn.execute(clientes.select()).fetchall()
+        return json.loads(json.dumps([dict(zip(
+            ('id_cliente', 'nombre_cliente', 'apellido_cliente','telefono_cliente','email_cliente','cc_cliente','direccion_cliente'),
+            registro)) for registro in result]))
+#=======================================================SERVICIOS================================================================
+@bicistar.get("/ver-servicios",tags=["Servicios"], response_model=List[Servicios])
+def allServicios():
+    with engine.connect() as conn:
+        result = conn.execute(servicios.select()).fetchall()
+        return json.loads(json.dumps([dict(zip(
+            ('id_servicio', 'descripcion_servicio', 'fecha_servicio','precio_servicio','id_empleado','id_categoria_servicio','id_cliente'),
+            (registro[0], registro[1], registro[2].isoformat(), float(registro[3]), registro[4], registro[5], registro[6])
+            )) for registro in result]))
+#=======================================================SERVICIOS================================================================
+@bicistar.get("/ver-ventas",tags=["Ventas"], response_model=List[Venta])
+def allVentas():
+    with engine.connect() as conn:
+        result = conn.execute(venta.select()).fetchall()
+        return json.loads(json.dumps([dict(zip(
+            ('id_venta', 'fecha_venta', 'descripcion_venta','precio_venta','id_empleado','id_producto','id_cliente'),
+            (registro[0], registro[1].isoformat(), registro[2], float(registro[3]), registro[4], registro[5], registro[6])
+            )) for registro in result]))
 
 #POST################################################################################################################################
 #####################################################################################################################################

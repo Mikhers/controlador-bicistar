@@ -70,7 +70,7 @@ class CategoriaServicio(BaseModel):
     descripcion_servicio: str
 
 
-class Cliente(BaseModel):
+class Clientes(BaseModel):
     id_cliente: Optional[int]
     nombre_cliente: str
     apellido_cliente: Optional[str]
@@ -80,7 +80,7 @@ class Cliente(BaseModel):
     direccion_cliente: Optional[str]
 
 
-class Servicio(BaseModel):
+class Servicios(BaseModel):
     id_servicio: Optional[int]
     descripcion_servicio: Optional[str]
     fecha_servicio: Optional[datetime]
