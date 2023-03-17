@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import Optional, Set
+from typing import Optional
 from datetime import datetime
 
 
@@ -18,12 +18,12 @@ class Proveedor(BaseModel):
     email_proveedor: Optional[str]
 
 
-class Pedido(BaseModel):
+class Pedidos(BaseModel):
     id_pedido: Optional[int]
     fecha_realizado: Optional[datetime]
     fecha_llegada: Optional[datetime]
-    estado_pedido: Set[str] = {"en proceso","recibido"}
-    total_pedido: Optional[float]
+    estado_pedido: str
+    total_pedido: float
     id_sede: Optional[int]
     id_proveedor: Optional[int]
 
@@ -34,8 +34,8 @@ class Empleado(BaseModel):
     apellido_empleado: Optional[str]
     email_empleado: str
     password_empleado: str
-    permiso_empleado: Set[str] = {"ALL PRIVILEGES", "CREATE", "DROP", "DELETE","INSERT"}
-    rol_empleado: Set[str] = {"administrador","caja","root"}
+    permiso_empleado: str
+    rol_empleado: str
     salario_empleado: int
     sede: int
 
@@ -46,7 +46,7 @@ class CategoriaProducto(BaseModel):
     descripcion_categoria_producto: str
 
 
-class Producto(BaseModel):
+class Productos(BaseModel):
     id_producto: Optional[int]
     nombre_producto: str
     descripcion_producto: Optional[str]

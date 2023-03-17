@@ -1,7 +1,7 @@
 from fastapi import FastAPI
-from router.router import user
+from router.router import bicistar
 
 app = FastAPI()
 
 
-app.include_router(user)
+app.include_router(bicistar)
