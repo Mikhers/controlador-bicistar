@@ -33,6 +33,19 @@ def insertSede(data: Sede):
         conn.commit()
         return Response(status_code=HTTP_201_CREATED)
 
+#METODO PUT
+@bicistar.put("/alter-sede/{id}",tags=["Sedes"], response_model=Sede)
+def alterSede(data: Sede, id: int):
+    with engine.connect() as conn:
+        conn.execute(sede.update().values(
+                                        nombre_sede=data.nombre_sede,
+                                        direccion_sede=data.direccion_sede,
+                                        ciudad_sede=data.ciudad_sede
+        ).where(sede.c.id_sede == id))
+        conn.commit()
+        result = conn.execute(sede.select().where(sede.c.id_sede == id)).first()
+        return {"id_sede":result[0], "nombre_sede":result[1], "direccion_sede":result[2], "ciudad_sede":result[3]}
+
 #METODO DELETE
 @bicistar.delete("/delete-sede/{id}", status_code=HTTP_204_NO_CONTENT, tags=['Sedes'])
 def dropSede(id: int):
@@ -40,6 +53,7 @@ def dropSede(id: int):
         conn.execute(sede.delete().where(sede.c.id_sede == id))
         conn.commit()
         return Response(status_code=HTTP_204_NO_CONTENT)
+    
 #=======================================================proveedor================================================================
 #METODO GET
 @bicistar.get("/ver-proveedores",tags=["Proveedores"], response_model=List[Proveedor])
@@ -58,6 +72,21 @@ def insertProveedor(data: Proveedor):
         conn.execute(proveedor.insert().values(new_data))
         conn.commit()
         return Response(status_code=HTTP_201_CREATED)
+
+#METODO PUT
+@bicistar.put("/alter-proveedor/{id}",tags=["Proveedores"], response_model=Proveedor)
+def alterProveedor(data: Proveedor, id: int):
+    with engine.connect() as conn:
+        conn.execute(proveedor.update().values(
+                                        nombre_proveedor=data.nombre_proveedor,
+                                        direccion_proveedor=data.direccion_proveedor,
+                                        telefono_proveedor=data.telefono_proveedor,
+                                        email_proveedor=data.email_proveedor
+
+        ).where(proveedor.c.id_proveedor == id))
+        conn.commit()
+        result = conn.execute(proveedor.select().where(proveedor.c.id_proveedor == id)).first()
+        return {"id_proveedor":result[0], "nombre_proveedor":result[1], "direccion_proveedor":result[2], "telefono_proveedor":result[3],"email_proveedor":result[4]}
 
 #METODO DELETE
 @bicistar.delete("/delete-proveedor/{id}", status_code=HTTP_204_NO_CONTENT, tags=['Proveedores'])
@@ -85,6 +114,23 @@ def insertPedido(data: Pedidos):
         conn.execute(pedidos.insert().values(new_data))
         conn.commit()
         return Response(status_code=HTTP_201_CREATED)
+
+#METODO PUT
+@bicistar.put("/alter-pedido/{id}",tags=["Pedidos"], response_model=Pedidos)
+def alterPedidos(data: Pedidos, id: int):
+    with engine.connect() as conn:
+        conn.execute(pedidos.update().values(
+                                    fecha_realizado=data.fecha_realizado,
+                                    fecha_llegada=data.fecha_llegada,
+                                    estado_pedido=data.estado_pedido,
+                                    total_pedido=data.total_pedido,
+                                    id_sede=data.id_sede,
+                                    id_proveedor=data.id_proveedor
+        ).where(pedidos.c.id_pedido == id))
+        conn.commit()
+        result = conn.execute(pedidos.select().where(pedidos.c.id_pedido == id)).first()
+        return {"id_pedido":result[0], "fecha_realizado":result[1], "fecha_llegada":result[2], "estado_pedido":result[3],"total_pedido":result[4],"id_sede":result[5],"id_proveedor":result[6]}
+
 
 #METODO DELETE
 @bicistar.delete("/delete-pedido/{id}", status_code=HTTP_204_NO_CONTENT, tags=['Pedidos'])
@@ -114,6 +160,26 @@ def insertEmpleado(data: Empleado):
         conn.commit()
         return Response(status_code=HTTP_201_CREATED)
 
+#METODO PUT
+@bicistar.put("/alter-empleado/{id}",tags=["Empleados"], response_model=Empleado)
+def alterEmpleado(data: Empleado, id: int):
+    with engine.connect() as conn:
+        encryp = generate_password_hash(data.password_empleado, "pbkdf2:sha256:30",30)
+        conn.execute(empleado.update().values(
+                                        nombre_empleado=data.nombre_empleado,
+                                        apellido_empleado=data.apellido_empleado,
+                                        email_empleado=data.email_empleado,
+                                        password_empleado=encryp,
+                                        permiso_empleado=data.permiso_empleado,
+                                        rol_empleado=data.rol_empleado,
+                                        salario_empleado=data.salario_empleado,
+                                        sede=data.sede
+        ).where(empleado.c.id_empleado == id))
+        conn.commit()
+        result = conn.execute(empleado.select().where(empleado.c.id_empleado == id)).first()
+        return {"id_empleado":result[0], "nombre_empleado":result[1], "apellido_empleado":result[2], "email_empleado":result[3],"password_empleado":result[4],
+                "permiso_empleado":result[5],"rol_empleado":result[6],"salario_empleado": result[7],"sede":result[8]}
+
 #METODO DELETE
 @bicistar.delete("/delete-empleado/{id}", status_code=HTTP_204_NO_CONTENT, tags=['Empleados'])
 def dropEmpleados(id: int):
@@ -138,6 +204,18 @@ def insertCategoriaProducto(data: CategoriaProducto):
         conn.execute(categoria_producto.insert().values(data.dict()))
         conn.commit()
         return Response(status_code=HTTP_201_CREATED)
+
+#METODO PUT
+@bicistar.put("/alter-categoria-producto/{id}",tags=["Categoria-producto"], response_model=CategoriaProducto)
+def alterCategoriaProducto(data: CategoriaProducto, id: int):
+    with engine.connect() as conn:
+        conn.execute(categoria_producto.update().values(
+                                            nombre_categoria_producto=data.nombre_categoria_producto,
+                                            descripcion_categoria_producto=data.descripcion_categoria_producto
+        ).where(categoria_producto.c.id_categoria_producto == id))
+        conn.commit()
+        result = conn.execute(categoria_producto.select().where(categoria_producto.c.id_categoria_producto == id)).first()
+        return {"id_categoria_producto":result[0], "nombre_categoria_producto":result[1], "descripcion_categoria_producto":result[2]}
 
 #METODO DELETE
 @bicistar.delete("/delete-categoria-producto/{id}", status_code=HTTP_204_NO_CONTENT, tags=['Categoria-producto'])
@@ -212,6 +290,25 @@ def insertProducto(data: Productos):
         conn.execute(productos.insert().values(new_data))
         conn.commit()
         return Response(status_code=HTTP_201_CREATED)
+
+#METODO PUT
+@bicistar.put("/alter-producto/{id}",tags=["Productos"], response_model=Productos)
+def alterProductos(data: Productos, id: int):
+    with engine.connect() as conn:
+        conn.execute(productos.update().values(
+                                        nombre_producto=data.nombre_producto,
+                                        descripcion_producto=data.descripcion_producto,
+                                        precio_producto=data.precio_producto,
+                                        cantidad_producto=data.cantidad_producto,
+                                        stock=data.stock,
+                                        codigo_producto=data.codigo_producto,
+                                        id_categoria_producto=data.id_categoria_producto
+
+        ).where(productos.c.id_producto == id))
+        conn.commit()
+        result = conn.execute(productos.select().where(productos.c.id_producto == id)).first()
+        return {"id_producto":result[0], "nombre_producto":result[1], "descripcion_producto":result[2], "precio_producto":result[3],"cantidad_producto":result[4],
+                "stock":result[5],"codigo_producto":result[6],"id_categoria_producto": result[7]}
 
 #METODO DELETE
 @bicistar.delete("/delete-producto/{id}", status_code=HTTP_204_NO_CONTENT, tags=['Productos'])
