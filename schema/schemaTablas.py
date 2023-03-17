@@ -59,6 +59,7 @@ class Productos(BaseModel):
 
     
 class PedidoProducto(BaseModel):
+    id_pedido_producto: Optional[int]
     id_pedido: int
     id_producto: int
     cantidad_producto: int

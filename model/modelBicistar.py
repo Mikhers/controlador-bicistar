@@ -60,13 +60,14 @@ productos = Table('productos', meta_data,
                     Column('cantidad_producto', Integer),
                     Column('stock', Integer),
                     Column('codigo_producto', String(50), nullable=False, unique=True),
-                    Column('id_categoria_producto', Integer, ForeignKey('categoria_producto.id_categoria_producto'))
+                    Column('id_categoria_producto', Integer, ForeignKey('categoria_producto.id_categoria_producto', ondelete='CASCADE', onupdate='CASCADE'))
 )
 
 
 pedido_producto = Table('pedido_producto', meta_data,
-                    Column('id_pedido', Integer, ForeignKey('pedidos.id_pedido', ondelete='CASCADE', onupdate='CASCADE'), primary_key=True),
-                    Column('id_producto', Integer, ForeignKey('productos.id_producto', ondelete='CASCADE', onupdate='CASCADE'), primary_key=True),
+                    Column('id_pedido_producto', Integer, primary_key=True, autoincrement=True),
+                    Column('id_pedido', Integer, ForeignKey('pedidos.id_pedido', ondelete='CASCADE', onupdate='CASCADE')),
+                    Column('id_producto', Integer, ForeignKey('productos.id_producto', ondelete='CASCADE', onupdate='CASCADE')),
                     Column('cantidad_producto', Integer, nullable=False),
                     Column('precio_unitario', DECIMAL(10,2), nullable=False)
 )
