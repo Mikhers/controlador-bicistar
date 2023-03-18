@@ -204,19 +204,37 @@ def alterClientes(data: Clientes, id: int):
                 "stock":result[5],"codigo_producto":result[6]}
 
 #METODO PUT
-@puts.put("/servicios/{id}",tags=["Servicios"], response_model=CategoriaServicio)
+@puts.put("/servicios/{id}",tags=["Servicios"], response_model=Servicios)
 def alterServicios(data: Servicios, id: int):
     with engine.connect() as conn:
         conn.execute(servicios.update().values(
-                                        descripcion_servicio=data.descripcion_servicio,
+                                       descripcion_servicio=data.descripcion_servicio,
                                         fecha_servicio=data.fecha_servicio,
                                         precio_servicio=data.precio_servicio,
                                         id_empleado=data.id_empleado,
                                         id_categoria_servicio=data.id_categoria_servicio,
                                         id_cliente=data.id_cliente
                                             
-        ).where(servicios.c.id_servicios == id))
+        ).where(servicios.c.id_servicio == id))
         conn.commit()
-        result = conn.execute(servicios.select().where(servicios.c.id_servicios == id)).first()
-        return {"id_servicios":result[0], "descripcion_servicio":result[1], "fecha_servicio":result[2], "precio_servicio":result[3],"id_empleado":result[4],
+        result = conn.execute(servicios.select().where(servicios.c.id_servicio == id)).first()
+        return {"id_servicio":result[0], "descripcion_servicio":result[1], "fecha_servicio":result[2], "precio_servicio":result[3],"id_empleado":result[4],
                 "id_categoria_servicio":result[5],"id_cliente":result[6]}
+
+#METODO PUT
+@puts.put("/venta/{id}",tags=["Ventas"], response_model=Venta)
+def alterVenta(data: Venta, id: int):
+    with engine.connect() as conn:
+        conn.execute(venta.update().values(
+                                    fecha_venta=data.fecha_venta,
+                                    descripcion_venta=data.descripcion_venta,
+                                    precio_venta=data.precio_venta,
+                                    id_empleado=data.id_empleado,
+                                    id_producto=data.id_producto,
+                                    id_cliente=data.id_cliente
+
+        ).where(venta.c.id_venta == id))
+        conn.commit()
+        result = conn.execute(venta.select().where(venta.c.id_venta == id)).first()
+        return {"id_venta":result[0], "fecha_venta":result[1], "descripcion_venta":result[2], "precio_venta":result[3],"id_empleado":result[4],
+                "id_producto":result[5],"id_cliente":result[6]}
