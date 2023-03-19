@@ -55,7 +55,7 @@ class Productos(BaseModel):
     cantidad_producto: Optional[int] = 0
     stock: Optional[int]
     codigo_producto: Optional[int]
-    id_categoria_producto: Optional[int]
+    id_categoria_producto: int
 
     
 class PedidoProducto(BaseModel):

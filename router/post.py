@@ -120,12 +120,14 @@ def validarIDProducto(data: Productos):
 
 #METODO POST
 @posts.post("/producto", tags=["Productos"], status_code=HTTP_201_CREATED)
-def insertProducto(data: Productos):
+def insertProducto(data: list[Productos]):
     with engine.connect() as conn:
-        new_data = validarIDProducto(data)
+        for index in data:
 
-        conn.execute(productos.insert().values(new_data))
-        conn.commit()
+            new_data = validarIDProducto(index)
+
+            conn.execute(productos.insert().values(new_data))
+            conn.commit()
         return Response(status_code=HTTP_201_CREATED)
 
 
