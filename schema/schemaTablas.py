@@ -9,6 +9,7 @@ class Sede(BaseModel):
     nombre_sede: str
     direccion_sede: str
     ciudad_sede: str
+    deleted_at: Optional[datetime]
 
 
 class Proveedor(BaseModel):
@@ -17,6 +18,7 @@ class Proveedor(BaseModel):
     direccion_proveedor: Optional[str]
     telefono_proveedor: Optional[str]
     email_proveedor: Optional[str]
+    deleted_at: Optional[datetime]
 
 
 class Pedidos(BaseModel):
@@ -27,6 +29,7 @@ class Pedidos(BaseModel):
     total_pedido: float
     id_sede: int
     id_proveedor: int
+    deleted_at: Optional[datetime]
 
 
 class Empleado(BaseModel):
@@ -39,12 +42,14 @@ class Empleado(BaseModel):
     rol_empleado: str
     salario_empleado: int
     sede: int
+    deleted_at: Optional[datetime]
 
 
 class CategoriaProducto(BaseModel):
     id_categoria_producto: Optional[int]
     nombre_categoria_producto: str
     descripcion_categoria_producto: str
+    deleted_at: Optional[datetime]
 
 
 class Productos(BaseModel):      
@@ -52,10 +57,9 @@ class Productos(BaseModel):
     nombre_producto: str
     descripcion_producto: Optional[str]
     precio_producto: float
-    cantidad_producto: Optional[int] = 0
-    stock: Optional[int]
-    codigo_producto: Optional[int]
-    id_categoria_producto: int
+    codigo_producto: Optional[str]
+    id_categoria_producto: Optional[int]
+    deleted_at: Optional[datetime]
 
     
 class PedidoProducto(BaseModel):
@@ -64,12 +68,14 @@ class PedidoProducto(BaseModel):
     id_producto: int
     cantidad_producto: int
     precio_unitario: float
+    deleted_at: Optional[datetime]
 
 
 class CategoriaServicio(BaseModel):
     id_categoria_servicio: Optional[int]
     nombre_servicio: str
     descripcion_servicio: str
+    deleted_at: Optional[datetime]
 
 
 class Clientes(BaseModel):
@@ -80,6 +86,7 @@ class Clientes(BaseModel):
     email_cliente: Optional[str]
     cc_cliente: Optional[str]
     direccion_cliente: Optional[str]
+    deleted_at: Optional[datetime]
 
 
 class Servicios(BaseModel):
@@ -90,13 +97,29 @@ class Servicios(BaseModel):
     id_empleado: int
     id_categoria_servicio: int
     id_cliente: int
+    deleted_at: Optional[datetime]
 
 
-class Venta(BaseModel):
-    id_venta: Optional[int]
-    fecha_venta: Optional[datetime] = datetime.now()
-    descripcion_venta: Optional[str]
-    precio_venta: float
+class Factura(BaseModel):
+    id_factura: Optional[int]
+    fecha_factura: Optional[datetime]
+    total: float
+    codigo_factura: Optional[str]
     id_empleado: int
-    id_producto: int
     id_cliente: int
+    id_sede: int
+    deleted_at: Optional[datetime]
+
+class ServicioVenta(BaseModel):
+    id_factura: int
+    id_servicio: int
+    cantidad: int
+    subtotal: float
+    deleted_at: Optional[datetime]
+
+class ProductoVenta(BaseModel):
+    id_factura: int
+    id_producto: int
+    cantidad: int
+    subtotal: float
+    deleted_at: Optional[datetime]
