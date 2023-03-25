@@ -22,16 +22,16 @@ def dropSede(id: int):
         return Response(status_code=HTTP_204_NO_CONTENT)
 
 
-# #METODO DELETE
-# @deletes.delete("/proveedor/{id}", status_code=HTTP_204_NO_CONTENT, tags=['Proveedores'])
-# def dropProveedor(id: int):
-#     with engine.connect() as conn:
-#         conn.execute(proveedor.delete().where(proveedor.c.id_proveedor == id))
-#         conn.commit()
-#         return Response(status_code=HTTP_204_NO_CONTENT)
+#======================================================================================================================================================================
+@deletes.delete("/proveedor/{id}", status_code=HTTP_204_NO_CONTENT, tags=['Proveedores'])
+def dropProveedor(id: int):
+    with engine.connect() as conn:
+        conn.execute(proveedor.update().values(deleted_at=datetime.now()).where(proveedor.c.id_proveedor == id))
+        conn.commit()
+        return Response(status_code=HTTP_204_NO_CONTENT)
 
 
-# #METODO DELETE
+#======================================================================================================================================================================
 # @deletes.delete("/pedido/{id}", status_code=HTTP_204_NO_CONTENT, tags=['Pedidos'])
 # def dropPedido(id: int):
 #     with engine.connect() as conn:
@@ -39,7 +39,7 @@ def dropSede(id: int):
 #         conn.commit()
 #         return Response(status_code=HTTP_204_NO_CONTENT)
     
-# #METODO DELETE
+#======================================================================================================================================================================
 # @deletes.delete("/empleado/{id}", status_code=HTTP_204_NO_CONTENT, tags=['Empleados'])
 # def dropEmpleados(id: int):
 #     with engine.connect() as conn:
@@ -47,7 +47,7 @@ def dropSede(id: int):
 #         conn.commit()
 #         return Response(status_code=HTTP_204_NO_CONTENT)
 
-# #METODO DELETE
+#======================================================================================================================================================================
 # @deletes.delete("/categoria-producto/{id}", status_code=HTTP_204_NO_CONTENT, tags=['Categoria-producto'])
 # def dropCategoriaProducto(id: int):
 #     with engine.connect() as conn:
@@ -55,7 +55,7 @@ def dropSede(id: int):
 #         conn.commit()
 #         return Response(status_code=HTTP_204_NO_CONTENT)
     
-# #METODO DELETE
+#======================================================================================================================================================================
 # @deletes.delete("/producto/{id}", status_code=HTTP_204_NO_CONTENT, tags=['Productos'])
 # def dropProducto(id: int):
 #     with engine.connect() as conn:
@@ -63,7 +63,7 @@ def dropSede(id: int):
 #         conn.commit()
 #         return Response(status_code=HTTP_204_NO_CONTENT)
 
-# #METODO DELETE
+#======================================================================================================================================================================
 # @deletes.delete("/pedido-producto/{id}", status_code=HTTP_204_NO_CONTENT, tags=['Pedido-producto'])
 # def dropPedidoProducto(id: int):
 #     with engine.connect() as conn:
@@ -71,7 +71,7 @@ def dropSede(id: int):
 #         conn.commit()
 #         return Response(status_code=HTTP_204_NO_CONTENT)
 
-# #METODO DELETE
+#======================================================================================================================================================================
 # @deletes.delete("/categoria-servicio/{id}", status_code=HTTP_204_NO_CONTENT, tags=['Categoria-servicio'])
 # def dropCategoriaServicio(id: int):
 #     with engine.connect() as conn:
@@ -79,7 +79,7 @@ def dropSede(id: int):
 #         conn.commit()
 #         return Response(status_code=HTTP_204_NO_CONTENT)
 
-# #METODO DELETE
+#======================================================================================================================================================================
 # @deletes.delete("/cliente/{id}", status_code=HTTP_204_NO_CONTENT, tags=['Clientes'])
 # def dropClientes(id: int):
 #     with engine.connect() as conn:
@@ -87,7 +87,7 @@ def dropSede(id: int):
 #         conn.commit()
 #         return Response(status_code=HTTP_204_NO_CONTENT)
     
-# #METODO DELETE
+#======================================================================================================================================================================
 # @deletes.delete("/servicio/{id}", status_code=HTTP_204_NO_CONTENT, tags=['Servicios'])
 # def dropServicios(id: int):
 #     with engine.connect() as conn:
@@ -95,7 +95,7 @@ def dropSede(id: int):
 #         conn.commit()
 #         return Response(status_code=HTTP_204_NO_CONTENT)
     
-# #METODO DELETE
+#======================================================================================================================================================================
 # @deletes.delete("/ventas/{id}", status_code=HTTP_204_NO_CONTENT, tags=['Ventas'])
 # def dropVenta(id: int):
 #     with engine.connect() as conn:

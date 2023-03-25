@@ -18,7 +18,7 @@ def root():
     return {"message": "Hola, Soy la API de BiciStar"}
 
 #=======================================================SEDE================================================================
-#METODO GET
+
 @gets.get("/sedes",tags=["Sedes"], response_model=List[Sede])
 def allSede():
     with engine.connect() as conn:
@@ -26,18 +26,18 @@ def allSede():
         return json.loads(json.dumps([dict(zip(('id_sede', 'nombre_sede', 'direccion_sede', 'ciudad_sede'), registro)) for registro in result])) 
 
 #=======================================================proveedor================================================================
-#METODO GET
-# @gets.get("/proveedores",tags=["Proveedores"], response_model=List[Proveedor])
-# def allProveedores():
-#     with engine.connect() as conn:
-#         result = conn.execute(proveedor.select()).fetchall()
-#         return json.loads(json.dumps([dict(zip(
-#             ('id_proveedor', 'nombre_proveedor', 'direccion_proveedor', 'telefono_proveedor','email_proveedor'), 
-#             registro)) for registro in result]))
+# METODO GET
+@gets.get("/proveedores",tags=["Proveedores"], response_model=List[Proveedor])
+def allProveedores():
+    with engine.connect() as conn:
+        result = conn.execute(proveedor.select().where(proveedor.c.deleted_at == None)).fetchall()
+        return json.loads(json.dumps([dict(zip(
+            ('id_proveedor', 'nombre_proveedor', 'direccion_proveedor', 'telefono_proveedor','email_proveedor'), 
+            registro)) for registro in result]))
 
 
 #=======================================================PEDIDOS================================================================
-#METODO GET
+
 # @gets.get("/pedidos",tags=["Pedidos"], response_model=List[Pedidos])
 # def allPedidos():
 #     with engine.connect() as conn:
@@ -48,7 +48,7 @@ def allSede():
 #             )) for registro in result]))
     
 #=======================================================EMPLEADOS================================================================
-#METODO GET
+
 # @gets.get("/empleados",tags=["Empleados"], response_model=List[Empleado])
 # def allEmpleados():
 #     with engine.connect() as conn:
@@ -59,7 +59,7 @@ def allSede():
 #             )) for registro in result]))
 
 #=======================================================CATEGORIA-PRODUCTO================================================================
-#METODO GET
+
 # @gets.get("/categoria-producto",tags=["Categoria-producto"], response_model=List[CategoriaProducto])
 # def allCategoriaProducto():
 #     with engine.connect() as conn:
@@ -75,7 +75,7 @@ def allSede():
 #         return {"id_categoria_producto":result[0], "nombre_categoria_producto":result[1], "descripcion_categoria_producto":result[2]}
 
 #=======================================================Productos================================================================
-#METODO GET
+
 # @gets.get("/productos",tags=["Productos"], response_model=List[Productos])
 # def allProductos():
 #     with engine.connect() as conn:
@@ -93,7 +93,7 @@ def allSede():
 #                 "stock":result[5],"codigo_producto":result[6],"id_categoria_producto": result[7]}
     
 #=======================================================PEDIDO-PRODUCTO================================================================
-#METODO GET
+
 # @gets.get("/pedido-producto",tags=["Pedido-producto"], response_model=List[PedidoProducto])
 # def allPedidoProducto():
 #     with engine.connect() as conn:
@@ -105,7 +105,7 @@ def allSede():
  
 #=======================================================CategoriaServicio================================================================
 
-#METODO GET
+
 # @gets.get("/categoria-servicio",tags=["Categoria-servicio"], response_model=List[CategoriaServicio])
 # def allCategoriaServicio():
 #     with engine.connect() as conn:
@@ -116,7 +116,7 @@ def allSede():
 
 
 #=======================================================CLIENTES================================================================
-#METODO GET
+
 # @gets.get("/clientes",tags=["Clientes"], response_model=List[Clientes])
 # def allClientes():
 #     with engine.connect() as conn:
@@ -126,7 +126,7 @@ def allSede():
 #             registro)) for registro in result]))
 
 #=======================================================SERVICIOS================================================================
-#METODO GET
+
 # @gets.get("/servicios",tags=["Servicios"], response_model=List[Servicios])
 # def allServicios():
 #     with engine.connect() as conn:
@@ -137,7 +137,7 @@ def allSede():
 #             )) for registro in result]))
 
 #=======================================================Venta================================================================
-#METODO GET
+
 # @gets.get("/ventas",tags=["Ventas"], response_model=List[Venta])
 # def allVentas():
 #     with engine.connect() as conn:

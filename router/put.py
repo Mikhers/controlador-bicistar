@@ -10,7 +10,7 @@ puts = APIRouter(
 )
 
 
-#METODO PUT
+#=================================================================================================================================================================
 @puts.put("/sede/{id}",tags=["Sedes"], response_model=Sede)
 def alterSede(data: Sede, id: int):
     with engine.connect() as conn:
@@ -24,22 +24,22 @@ def alterSede(data: Sede, id: int):
         return {"id_sede":result[0], "nombre_sede":result[1], "direccion_sede":result[2], "ciudad_sede":result[3]}
 
 
-# #METODO PUT
-# @puts.put("/proveedor/{id}",tags=["Proveedores"], response_model=Proveedor)
-# def alterProveedor(data: Proveedor, id: int):
-#     with engine.connect() as conn:
-#         conn.execute(proveedor.update().values(
-#                                         nombre_proveedor=data.nombre_proveedor,
-#                                         direccion_proveedor=data.direccion_proveedor,
-#                                         telefono_proveedor=data.telefono_proveedor,
-#                                         email_proveedor=data.email_proveedor
+#=================================================================================================================================================================
+@puts.put("/proveedor/{id}",tags=["Proveedores"], response_model=Proveedor)
+def alterProveedor(data: Proveedor, id: int):
+    with engine.connect() as conn:
+        conn.execute(proveedor.update().values(
+                                        nombre_proveedor=data.nombre_proveedor,
+                                        direccion_proveedor=data.direccion_proveedor,
+                                        telefono_proveedor=data.telefono_proveedor,
+                                        email_proveedor=data.email_proveedor
 
-#         ).where(proveedor.c.id_proveedor == id))
-#         conn.commit()
-#         result = conn.execute(proveedor.select().where(proveedor.c.id_proveedor == id)).first()
-#         return {"id_proveedor":result[0], "nombre_proveedor":result[1], "direccion_proveedor":result[2], "telefono_proveedor":result[3],"email_proveedor":result[4]}
+        ).where(proveedor.c.id_proveedor == id))
+        conn.commit()
+        result = conn.execute(proveedor.select().where(proveedor.c.id_proveedor == id)).first()
+        return {"id_proveedor":result[0], "nombre_proveedor":result[1], "direccion_proveedor":result[2], "telefono_proveedor":result[3],"email_proveedor":result[4]}
 
-# #METODO PUT
+# #=================================================================================================================================================================
 # @puts.put("/pedido/{id}",tags=["Pedidos"], response_model=Pedidos)
 # def alterPedidos(data: Pedidos, id: int):
 #     with engine.connect() as conn:
@@ -55,7 +55,7 @@ def alterSede(data: Sede, id: int):
 #         result = conn.execute(pedidos.select().where(pedidos.c.id_pedido == id)).first()
 #         return {"id_pedido":result[0], "fecha_realizado":result[1], "fecha_llegada":result[2], "estado_pedido":result[3],"total_pedido":result[4],"id_sede":result[5],"id_proveedor":result[6]}
 
-# #METODO PUT
+# #=================================================================================================================================================================
 # @puts.put("/empleado/{id}",tags=["Empleados"], response_model=Empleado)
 # def alterEmpleado(data: Empleado, id: int):
 #     with engine.connect() as conn:
@@ -75,7 +75,7 @@ def alterSede(data: Sede, id: int):
 #         return {"id_empleado":result[0], "nombre_empleado":result[1], "apellido_empleado":result[2], "email_empleado":result[3],"password_empleado":result[4],
 #                 "permiso_empleado":result[5],"rol_empleado":result[6],"salario_empleado": result[7],"sede":result[8]}
 
-# #METODO PUT
+# #=================================================================================================================================================================
 # @puts.put("/categoria-producto/{id}",tags=["Categoria-producto"], response_model=CategoriaProducto)
 # def alterCategoriaProducto(data: CategoriaProducto, id: int):
 #     with engine.connect() as conn:
@@ -87,7 +87,7 @@ def alterSede(data: Sede, id: int):
 #         result = conn.execute(categoria_producto.select().where(categoria_producto.c.id_categoria_producto == id)).first()
 #         return {"id_categoria_producto":result[0], "nombre_categoria_producto":result[1], "descripcion_categoria_producto":result[2]}
 
-# #METODO PUT
+# #=================================================================================================================================================================
 # @puts.put("/pedido-producto/{id}",tags=["Pedido-producto"], response_model=PedidoProducto)
 # def alterPedidoProducto(data: PedidoProducto, id: int):
 #     with engine.connect() as conn:
@@ -102,7 +102,7 @@ def alterSede(data: Sede, id: int):
 #         result = conn.execute(pedido_producto.select().where(pedido_producto.c.id_pedido_producto == id)).first()
 #         return {"id_pedido_producto":result[0], "id_pedido":result[1], "id_producto":result[2], "cantidad_producto":result[3],"precio_unitario":result[4]}
 
-# #METODO PUT
+# #=================================================================================================================================================================
 # @puts.put("/categoria-servicio/{id}",tags=["Categoria-servicio"], response_model=CategoriaServicio)
 # def alterCategoriaServicio(data: CategoriaServicio, id: int):
 #     with engine.connect() as conn:
@@ -162,7 +162,7 @@ def alterSede(data: Sede, id: int):
 #             new_data['codigo_producto'] = "1"+str(num)
 #         return new_data
 
-# #METODO PUT
+# #=================================================================================================================================================================
 # @puts.put("/producto/{id}",tags=["Productos"], response_model=Productos)
 # def alterProductos(data: Productos, id: int):
 #     with engine.connect() as conn:
@@ -185,7 +185,7 @@ def alterSede(data: Sede, id: int):
 
 
 
-# #METODO PUT
+# #=================================================================================================================================================================
 # @puts.put("/cliente/{id}",tags=["Clientes"], response_model=CategoriaServicio)
 # def alterClientes(data: Clientes, id: int):
 #     with engine.connect() as conn:
@@ -203,7 +203,7 @@ def alterSede(data: Sede, id: int):
 #         return {"id_producto":result[0], "nombre_producto":result[1], "descripcion_producto":result[2], "precio_producto":result[3],"cantidad_producto":result[4],
 #                 "stock":result[5],"codigo_producto":result[6]}
 
-# #METODO PUT
+# #=================================================================================================================================================================
 # @puts.put("/servicios/{id}",tags=["Servicios"], response_model=Servicios)
 # def alterServicios(data: Servicios, id: int):
 #     with engine.connect() as conn:
@@ -221,7 +221,7 @@ def alterSede(data: Sede, id: int):
 #         return {"id_servicio":result[0], "descripcion_servicio":result[1], "fecha_servicio":result[2], "precio_servicio":result[3],"id_empleado":result[4],
 #                 "id_categoria_servicio":result[5],"id_cliente":result[6]}
 
-# #METODO PUT
+# #=================================================================================================================================================================
 # @puts.put("/venta/{id}",tags=["Ventas"], response_model=Venta)
 # def alterVenta(data: Venta, id: int):
 #     with engine.connect() as conn:

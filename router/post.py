@@ -19,16 +19,16 @@ def insertSede(data: Sede):
         conn.commit()
         return Response(status_code=HTTP_201_CREATED)
 
-# #METODO POST
-# @posts.post("/proveedor", tags=["Proveedores"], status_code=HTTP_201_CREATED)
-# def insertProveedor(data: Proveedor):
-#     with engine.connect() as conn:
-#         new_data=data.dict()
-#         conn.execute(proveedor.insert().values(new_data))
-#         conn.commit()
-#         return Response(status_code=HTTP_201_CREATED)
+
+@posts.post("/proveedor", tags=["Proveedores"], status_code=HTTP_201_CREATED)
+def insertProveedor(data: Proveedor):
+    with engine.connect() as conn:
+        new_data=data.dict()
+        conn.execute(proveedor.insert().values(new_data))
+        conn.commit()
+        return Response(status_code=HTTP_201_CREATED)
     
-# #METODO POST
+
 # @posts.post("/pedido", tags=["Pedidos"], status_code=HTTP_201_CREATED)
 # def insertPedido(data: Pedidos):
 #     with engine.connect() as conn:
@@ -37,7 +37,7 @@ def insertSede(data: Sede):
 #         conn.commit()
 #         return Response(status_code=HTTP_201_CREATED)
     
-# #METODO POST
+
 # @posts.post("/empleado", tags=["Empleados"], status_code=HTTP_201_CREATED)
 # def insertEmpleado(data: Empleado):
 #     with engine.connect() as conn:
@@ -47,7 +47,7 @@ def insertSede(data: Sede):
 #         conn.commit()
 #         return Response(status_code=HTTP_201_CREATED)
 
-# #METODO POST
+
 # @posts.post("/categoria-producto", tags=["Categoria-producto"], status_code=HTTP_201_CREATED)
 # def insertCategoriaProducto(data: CategoriaProducto):
 #     with engine.connect() as conn:
@@ -55,7 +55,7 @@ def insertSede(data: Sede):
 #         conn.commit()
 #         return Response(status_code=HTTP_201_CREATED)
 
-# #METODO POST
+
 # @posts.post("/pedido-producto", tags=["Pedido-producto"], status_code=HTTP_201_CREATED)
 # def insertPedidoProducto(data: PedidoProducto):
 #     with engine.connect() as conn:
@@ -63,7 +63,7 @@ def insertSede(data: Sede):
 #         conn.commit()
 #         return Response(status_code=HTTP_201_CREATED)
     
-# #METODO POST
+
 # @posts.post("/categoria-servicio", tags=["Categoria-servicio"], status_code=HTTP_201_CREATED)
 # def insertCategoriaServicio(data: CategoriaServicio):
 #     with engine.connect() as conn:
@@ -118,7 +118,7 @@ def insertSede(data: Sede):
 #             new_data['codigo_producto'] = "1"+str(num)
 #         return new_data
 
-# #METODO POST
+
 # @posts.post("/producto", tags=["Productos"], status_code=HTTP_201_CREATED)
 # def insertProducto(data: list[Productos]):
 #     with engine.connect() as conn:
@@ -131,7 +131,7 @@ def insertSede(data: Sede):
 #         return Response(status_code=HTTP_201_CREATED)
 
 
-# #METODO POST
+
 # @posts.post("/cliente", tags=["Clientes"], status_code=HTTP_201_CREATED)
 # def insertCliente(data: Clientes):
 #     with engine.connect() as conn:
@@ -139,7 +139,7 @@ def insertSede(data: Sede):
 #         conn.commit()
 #         return Response(status_code=HTTP_201_CREATED)
     
-# #METODO POST
+
 # @posts.post("/servicio", tags=["Servicios"], status_code=HTTP_201_CREATED)
 # def insertServicios(data: Servicios):
 #     with engine.connect() as conn:
@@ -147,7 +147,7 @@ def insertSede(data: Sede):
 #         conn.commit()
 #         return Response(status_code=HTTP_201_CREATED)
 
-# #METODO POST
+
 # @posts.post("/venta", tags=["Ventas"], status_code=HTTP_201_CREATED)
 # def insertVenta(data: Venta):
 #     with engine.connect() as conn:
