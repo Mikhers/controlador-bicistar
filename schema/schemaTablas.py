@@ -27,8 +27,9 @@ class Pedidos(BaseModel):
     fecha_llegada: datetime
     estado_pedido: str
     total_pedido: float
-    id_sede: int
     id_proveedor: int
+    id_empleado: int
+    id_sede: int
     deleted_at: Optional[datetime]
 
 
@@ -41,7 +42,7 @@ class Empleado(BaseModel):
     permiso_empleado: str
     rol_empleado: str
     salario_empleado: int
-    sede: int
+    id_sede: int
     deleted_at: Optional[datetime]
 
 
@@ -61,9 +62,13 @@ class Productos(BaseModel):
     id_categoria_producto: Optional[int]
     deleted_at: Optional[datetime]
 
-    
+class SedesProductos(BaseModel):
+    id_sede:Optional[int]
+    id_producto:Optional[int]
+    stock:Optional[int]
+    deleted_at:Optional[datetime]
+
 class PedidoProducto(BaseModel):
-    id_pedido_producto: Optional[int]
     id_pedido: int
     id_producto: int
     cantidad_producto: int
@@ -91,12 +96,10 @@ class Clientes(BaseModel):
 
 class Servicios(BaseModel):
     id_servicio: Optional[int]
+    nombre_servicio: str
     descripcion_servicio: Optional[str]
-    fecha_servicio: Optional[datetime] = datetime.now()
     precio_servicio: float
-    id_empleado: int
     id_categoria_servicio: int
-    id_cliente: int
     deleted_at: Optional[datetime]
 
 

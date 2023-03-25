@@ -19,7 +19,20 @@ proveedor = Table('proveedor', meta_data,
                     Column('telefono_proveedor', String(20)),
                     Column('email_proveedor', String(255)),
                     Column('deleted_at', DateTime, default=null)
+)
 
+# Definición de la tabla empleado
+empleado = Table('empleado', meta_data,
+                    Column('id_empleado', Integer, primary_key=True, autoincrement=True),
+                    Column('nombre_empleado', String(50), nullable=False),
+                    Column('apellido_empleado', String(50)),
+                    Column('email_empleado', String(255), nullable=False),
+                    Column('password_empleado', String(255), nullable=False),
+                    Column('permiso_empleado', String(20)),
+                    Column('rol_empleado', String(20)),
+                    Column('salario_empleado', DECIMAL(10, 2)),
+                    Column('id_sede', Integer, ForeignKey('sede.id_sede', ondelete='CASCADE', onupdate='CASCADE')),
+                    Column('deleted_at', DateTime, default=null)
 )
 
 # Definición de la tabla pedidos
@@ -33,22 +46,6 @@ pedidos = Table('pedidos', meta_data,
                     Column('id_proveedor', Integer, ForeignKey('proveedor.id_proveedor', ondelete='CASCADE', onupdate='CASCADE')),
                     Column('id_empleado', Integer, ForeignKey('empleado.id_empleado', ondelete='CASCADE', onupdate='CASCADE')),
                     Column('deleted_at', DateTime, default=null)
-
-)
-
-# Definición de la tabla empleado
-empleado = Table('empleado', meta_data,
-                    Column('id_empleado', Integer, primary_key=True, autoincrement=True),
-                    Column('nombre_empleado', String(50), nullable=False),
-                    Column('apellido_empleado', String(50)),
-                    Column('email_empleado', String(255), nullable=False),
-                    Column('password_empleado', String(255), nullable=False),
-                    Column('permiso_empleado', String(20)),
-                    Column('rol_empleado', String(20)),
-                    Column('salario_empleado', DECIMAL(10, 2)),
-                    Column('sede', Integer, ForeignKey('sede.id_sede', ondelete='CASCADE', onupdate='CASCADE')),
-                    Column('deleted_at', DateTime, default=null)
-
 )
 
 # Definición de la tabla categoria_producto
@@ -73,17 +70,16 @@ productos = Table('productos', meta_data,
 )
 
 sedes_productos = Table('sedes_productos', meta_data,
-	                Column('id_sede', Integer, primary_key=True),
-                    Column('id_producto', Integer, primary_key=True),
+	                Column('id_sede',Integer, ForeignKey('sede.id_sede', ondelete='CASCADE', onupdate='CASCADE'),primary_key=True),
+                    Column('id_producto',Integer,ForeignKey('productos.id_producto', ondelete='CASCADE', onupdate='CASCADE'), primary_key=True),
 	                Column('stock', Integer, default=1),
                     Column('deleted_at', DateTime, default=null)
 
 )
 
 pedido_producto = Table('pedido_producto', meta_data,
-                    Column('id_pedido_producto', Integer, primary_key=True, autoincrement=True),
-                    Column('id_pedido', Integer, ForeignKey('pedidos.id_pedido', ondelete='CASCADE', onupdate='CASCADE')),
-                    Column('id_producto', Integer, ForeignKey('productos.id_producto', ondelete='CASCADE', onupdate='CASCADE')),
+                    Column('id_pedido', Integer, ForeignKey('pedidos.id_pedido', ondelete='CASCADE', onupdate='CASCADE'),primary_key=True),
+                    Column('id_producto', Integer, ForeignKey('productos.id_producto', ondelete='CASCADE', onupdate='CASCADE'),primary_key=True),
                     Column('cantidad_producto', Integer, nullable=False),
                     Column('precio_unitario', DECIMAL(10,2), nullable=False),
                     Column('deleted_at', DateTime, default=null)
@@ -133,8 +129,8 @@ factura = Table('factura', meta_data,
 )
 
 servicio_venta = Table('servicio_venta', meta_data,
-                    Column('id_factura', Integer, primary_key=True),
-	                Column('id_servicio', Integer, primary_key=True),
+                    Column('id_factura', Integer, ForeignKey('factura.id_factura', ondelete='CASCADE', onupdate='CASCADE'),primary_key=True),
+	                Column('id_servicio', Integer, ForeignKey('servicio.id_servicio', ondelete='CASCADE', onupdate='CASCADE'),primary_key=True),
                     Column('cantidad', Integer, default=1),
                     Column('subtotal', DECIMAL(10,2)),
                     Column('deleted_at', DateTime, default=null)
