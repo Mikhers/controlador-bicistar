@@ -2,7 +2,7 @@ from fastapi import APIRouter, Response
 from starlette.status import HTTP_204_NO_CONTENT
 from datetime import datetime
 from sqlalchemy import and_
-from model.modelBicistar  import sede, proveedor, pedidos, empleado, categoria_producto, productos, pedido_producto, categoria_servicio, clientes, servicios,sedes_productos
+from model.modelBicistar  import sede, proveedor, pedidos, empleado, categoria_producto, productos, pedido_producto, categoria_servicio, clientes, servicios,sedes_productos,factura,servicio_venta,producto_venta
 from config.db import engine
 
 deletes = APIRouter(
@@ -103,9 +103,25 @@ def dropClientes(id: int):
     
     
 #=======================================================Venta================================================================
-# @deletes.delete("/ventas/{id}", status_code=HTTP_204_NO_CONTENT, tags=['Ventas'])
-# def dropVenta(id: int):
-#     with engine.connect() as conn:
-#         conn.execute(venta.update().values(deleted_at=datetime.now()).where(venta.c.id_venta == id))
-#         conn.commit()
-#         return Response(status_code=HTTP_204_NO_CONTENT)
+@deletes.delete("/factura/{id}", status_code=HTTP_204_NO_CONTENT, tags=['Facturas'])
+def dropVenta(id: int):
+    with engine.connect() as conn:
+        conn.execute(factura.update().values(deleted_at=datetime.now()).where(factura.c.id_factura == id))
+        conn.commit()
+        return Response(status_code=HTTP_204_NO_CONTENT)
+    
+#=======================================================ServicioVenta================================================================
+@deletes.delete("/servicio-venta/{id}/{idd}",tags=["Servicio-Venta"], status_code=HTTP_204_NO_CONTENT)
+def dropServicioVenta(id: int, idd:int):
+    with engine.connect() as conn:
+        conn.execute(servicio_venta.update().values(deleted_at=datetime.now()).where(and_(servicio_venta.c.id_factura == id,servicio_venta.c.id_servicio == idd)))
+        conn.commit()
+        return Response(status_code=HTTP_204_NO_CONTENT)
+    
+#=======================================================producto-venta================================================================
+@deletes.delete("/producto-venta/{id}/{idd}",tags=["Producto-Venta"], status_code=HTTP_204_NO_CONTENT)
+def dropServicioVenta(id: int, idd:int):
+    with engine.connect() as conn:
+        conn.execute(producto_venta.update().values(deleted_at=datetime.now()).where(and_(producto_venta.c.id_factura == id,producto_venta.c.id_producto == idd)))
+        conn.commit()
+        return Response(status_code=HTTP_204_NO_CONTENT)

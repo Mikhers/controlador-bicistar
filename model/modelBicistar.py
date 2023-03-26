@@ -118,7 +118,7 @@ clientes = Table('clientes', meta_data,
 
 factura = Table('factura', meta_data,
                     Column('id_factura', Integer, primary_key=True, autoincrement=True),
-                    Column('fecha_factura', DateTime,default=null),
+                    Column('fecha_factura', DateTime,default=datetime.now()),
                     Column('total', DECIMAL(10,2), nullable=False),
                     Column('codigo_factura', String(50), nullable=False),
                     Column('id_empleado', Integer, ForeignKey('empleado.id_empleado', ondelete='CASCADE', onupdate='CASCADE'), nullable=False),

@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Response
 from starlette.status import HTTP_201_CREATED
-from schema.schemaTablas import Sede, Proveedor, Pedidos, Empleado, CategoriaProducto, Productos, PedidoProducto, CategoriaServicio, Clientes, Servicios,SedesProductos
-from model.modelBicistar import sede, proveedor, pedidos, empleado, categoria_producto, productos, pedido_producto, categoria_servicio, clientes, servicios,sedes_productos
+from schema.schemaTablas import Sede, Proveedor, Pedidos, Empleado, CategoriaProducto, Productos, PedidoProducto, CategoriaServicio, Clientes, Servicios,SedesProductos,Factura,ServicioVenta,ProductoVenta
+from model.modelBicistar import sede, proveedor, pedidos, empleado, categoria_producto, productos, pedido_producto, categoria_servicio, clientes, servicios,sedes_productos,factura,servicio_venta,producto_venta
 from werkzeug.security import generate_password_hash#, check_password_hash
 from config.db import engine
 from typing import List
@@ -159,13 +159,77 @@ def insertCliente(data: Clientes):
         return Response(status_code=HTTP_201_CREATED)
     
 
-#=======================================================Venta================================================================
-# @posts.post("/venta", tags=["Ventas"], status_code=HTTP_201_CREATED)
-# def insertVenta(data: Venta):
-#     with engine.connect() as conn:
-#         conn.execute(venta.insert().values(data.dict()))
-#         conn.commit()
-#         return Response(status_code=HTTP_201_CREATED)
+#=======================================================Factura================================================================
+def codigoBarrasFactura(data: Factura):
+   with engine.connect() as conn:
+        new_data = data.dict()
+        result = conn.execute(factura.select()).fetchall()
+        dicio = json.loads(json.dumps([dict(zip(
+            ('id_factura', 'fecha_factura', 'total','codigo_factura','id_empleado','id_cliente','id_sede'),
+            (registro[0], registro[1].isoformat(), float(registro[2]), registro[3],  registro[4], registro[5], registro[6])
+            )) for registro in result]))
+        max_id=0
+        for facturaa in dicio:
+            # Obtener el valor de la clave 'id_factura'
+            id_factura = facturaa['id_factura']
+            # Si el valor de 'id_factura' es mayor que el número mayor actual, actualizar la variable 'max_id'
+            if id_factura > max_id:
+                max_id = id_factura
+
+        if(data.id_factura != None):
+            num = data.id_factura
+        else:
+            num = max_id+1
+            new_data['id_factura'] = num
+
+        if(len(str(num))<2):
+            new_data['codigo_factura'] = "90000000000"+str(num)
+        elif(len(str(num))<3):
+            new_data['codigo_factura'] = "9000000000"+str(num)
+        elif(len(str(num))<4):
+            new_data['codigo_factura'] = "900000000"+str(num)
+        elif(len(str(num))<5):
+            new_data['codigo_factura'] = "90000000"+str(num)
+        elif(len(str(num))<6):
+            new_data['codigo_factura'] = "9000000"+str(num)
+        elif(len(str(num))<7):
+            new_data['codigo_factura'] = "900000"+str(num)
+        elif(len(str(num))<8):
+            new_data['codigo_factura'] = "90000"+str(num)
+        elif(len(str(num))<9):
+            new_data['codigo_factura'] = "9000"+str(num)
+        elif(len(str(num))<10):
+            new_data['codigo_factura'] = "900"+str(num)
+        elif(len(str(num))<11):
+            new_data['codigo_factura'] = "90"+str(num)
+        elif(len(str(num))<12):
+            new_data['codigo_factura'] = "9"+str(num)
+        return new_data
+
+@posts.post("/factura", tags=["Facturas"], status_code=HTTP_201_CREATED)
+def insertfactura(data: Factura):
+    with engine.connect() as conn:
+        new_data = codigoBarrasFactura(data)
+        conn.execute(factura.insert().values(new_data))
+        conn.commit()
+        return Response(status_code=HTTP_201_CREATED)
+    
+
+#=======================================================servicio_venta================================================================
+@posts.post("/servicio-venta", tags=["Servicio-Venta"], status_code=HTTP_201_CREATED)
+def insertServicioVenta(data: ServicioVenta):
+    with engine.connect() as conn:
+        conn.execute(servicio_venta.insert().values(data.dict()))
+        conn.commit()
+        return Response(status_code=HTTP_201_CREATED)
+    
+#=======================================================producto_venta================================================================
+@posts.post("/producto-venta", tags=["Producto-Venta"], status_code=HTTP_201_CREATED)
+def insertProductoVenta(data: ProductoVenta):
+    with engine.connect() as conn:
+        conn.execute(producto_venta.insert().values(data.dict()))
+        conn.commit()
+        return Response(status_code=HTTP_201_CREATED)
 
 
 

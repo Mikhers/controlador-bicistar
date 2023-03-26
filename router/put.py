@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 from sqlalchemy import and_
-from schema.schemaTablas import Sede, Proveedor, Pedidos, Empleado, CategoriaProducto, Productos, PedidoProducto, CategoriaServicio, Clientes, Servicios,SedesProductos
-from model.modelBicistar  import sede, proveedor, pedidos, empleado, categoria_producto, productos, pedido_producto, categoria_servicio, clientes, servicios,sedes_productos
+from schema.schemaTablas import Sede, Proveedor, Pedidos, Empleado, CategoriaProducto, Productos, PedidoProducto, CategoriaServicio, Clientes, Servicios,SedesProductos, Factura,ServicioVenta,ProductoVenta
+from model.modelBicistar  import sede, proveedor, pedidos, empleado, categoria_producto, productos, pedido_producto, categoria_servicio, clientes, servicios,sedes_productos,factura,servicio_venta,producto_venta
 from werkzeug.security import generate_password_hash#, check_password_hash
 from config.db import engine
 import json
@@ -183,20 +183,53 @@ def alterClientes(data: Clientes, id: int):
                 "cc_cliente":result[5],"direccion_cliente":result[6]}
 
 
-# #=======================================================Venta================================================================
-# @puts.put("/venta/{id}",tags=["Ventas"], response_model=Venta)
-# def alterVenta(data: Venta, id: int):
-#     with engine.connect() as conn:
-#         conn.execute(venta.update().values(
-#                                     fecha_venta=data.fecha_venta,
-#                                     descripcion_venta=data.descripcion_venta,
-#                                     precio_venta=data.precio_venta,
-#                                     id_empleado=data.id_empleado,
-#                                     id_producto=data.id_producto,
-#                                     id_cliente=data.id_cliente
+# #=======================================================factura================================================================
+@puts.put("/factura/{id}",tags=["Facturas"], response_model=Factura)
+def alterFactura(data: Factura, id: int):
+    with engine.connect() as conn:
+        conn.execute(factura.update().values(
+                                    fecha_factura=data.fecha_factura,
+                                    total=data.total,
+                                    codigo_factura=data.codigo_factura,
+                                    id_empleado=data.id_empleado,
+                                    id_cliente=data.id_cliente,
+                                    id_sede=data.id_sede
 
-#         ).where(venta.c.id_venta == id))
-#         conn.commit()
-#         result = conn.execute(venta.select().where(venta.c.id_venta == id)).first()
-#         return {"id_venta":result[0], "fecha_venta":result[1], "descripcion_venta":result[2], "precio_venta":result[3],"id_empleado":result[4],
-#                 "id_producto":result[5],"id_cliente":result[6]}
+        ).where(factura.c.id_factura == id))
+        conn.commit()
+        result = conn.execute(factura.select().where(factura.c.id_factura == id)).first()
+        return {"id_factura":result[0], "fecha_factura":result[1], "total":result[2], "codigo_factura":result[3],"id_empleado":result[4],
+                "id_cliente":result[5],"id_sede":result[6]}
+    
+
+# #=======================================================Servicio-Venta================================================================
+
+@puts.put("/servicio-venta/{id}/{idd}",tags=["Servicio-Venta"], response_model=ServicioVenta)
+def alterServicioVenta(data: ServicioVenta, id: int, idd:int):
+    with engine.connect() as conn:
+        conn.execute(servicio_venta.update().values(
+                                    id_factura=data.id_factura,
+                                    id_servicio=data.id_servicio,
+                                    cantidad=data.cantidad,
+                                    subtotal=data.subtotal
+
+        ).where(and_(servicio_venta.c.id_factura == id,servicio_venta.c.id_servicio == idd)))
+        conn.commit()
+        result = conn.execute(servicio_venta.select().where(servicio_venta.c.id_factura == id)).first()
+        return {"id_factura":result[0], "id_servicio":result[1], "cantidad":result[2], "subtotal":result[3]}
+    
+# #=======================================================Servicio-Venta================================================================
+
+@puts.put("/producto-venta/{id}/{idd}",tags=["Producto-Venta"], response_model=ProductoVenta)
+def alterProductoVenta(data: ProductoVenta, id: int, idd:int):
+    with engine.connect() as conn:
+        conn.execute(producto_venta.update().values(
+                                    id_factura=data.id_factura,
+                                    id_producto=data.id_producto,
+                                    cantidad=data.cantidad,
+                                    subtotal=data.subtotal
+
+        ).where(and_(producto_venta.c.id_factura == id,producto_venta.c.id_producto == idd)))
+        conn.commit()
+        result = conn.execute(producto_venta.select().where(producto_venta.c.id_factura == id)).first()
+        return {"id_factura":result[0], "id_producto":result[1], "cantidad":result[2], "subtotal":result[3]}
