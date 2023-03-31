@@ -25,6 +25,12 @@ def allSede():
         result = conn.execute(sede.select().where(sede.c.deleted_at == None)).fetchall()
         return json.loads(json.dumps([dict(zip(('id_sede', 'nombre_sede', 'direccion_sede', 'ciudad_sede'), registro)) for registro in result])) 
 
+@gets.get("/sedes/{id}",tags=["Sedes"], response_model=Sede)
+def allSede(id: int):
+    with engine.connect() as conn:
+        result = conn.execute(sede.select().where(and_(sede.c.deleted_at == None, sede.c.id_sede == id))).first()
+        return {'id_sede':result[0],'nombre_sede':result[1],'direccion_sede':result[2],'ciudad_sede':result[3]}
+
 #=======================================================proveedor================================================================
 # METODO GET
 @gets.get("/proveedores",tags=["Proveedores"], response_model=List[Proveedor])
@@ -46,6 +52,13 @@ def allEmpleados():
             (registro[0], registro[1], registro[2], registro[3], registro[4], registro[5], registro[6], float(registro[7]), registro[8])
             )) for registro in result]))
 
+@gets.get("/empleados/{id}",tags=["Empleados"], response_model=Empleado)
+def allEmpleados(id:int):
+    with engine.connect() as conn:
+        result = conn.execute(empleado.select().where(and_(empleado.c.deleted_at == None,empleado.c.id_empleado == id))).first()
+        return {'id_empleado':result[0], "nombre_empleado":result[1], "apellido_empleado":result[2], "email_empleado":result[3], "password_empleado":result[4],
+                 "permiso_empleado":result[5], "rol_empleado":result[6], "salario_empleado":float(result[7]), "id_sede":result[8]}
+
 #=======================================================PEDIDOS================================================================
 
 @gets.get("/pedidos",tags=["Pedidos"], response_model=List[Pedidos])
@@ -56,6 +69,13 @@ def allPedidos():
             ('id_pedido', 'fecha_realizado', 'fecha_llegada', 'estado_pedido','total_pedido','id_sede','id_proveedor','id_empleado'),
             (registro[0], registro[1].isoformat(), registro[2].isoformat(), str(registro[3]), float(registro[4]), registro[5], registro[6], registro[7])
             )) for registro in result]))
+
+@gets.get("/pedidos/{id}",tags=["Pedidos"], response_model=Pedidos)
+def allPedidos(id:int):
+    with engine.connect() as conn:
+        result = conn.execute(pedidos.select().where(and_(pedidos.c.deleted_at == None,pedidos.c.id_pedido == id))).first()
+        return {'id_pedido':result[0], 'fecha_realizado':result[1].isoformat(), 'fecha_llegada':result[2].isoformat(), 
+                'estado_pedido':str(result[3]), 'total_pedido':float(result[4]), 'id_sede':result[5], 'id_proveedor':result[6], 'id_empleado':result[7]}
     
 
 #=======================================================CATEGORIA-PRODUCTO================================================================
@@ -112,7 +132,13 @@ def sedeSedesProductos(id:int):
             ('id_sede', 'id_producto', 'stock'),
             (registro[0], registro[1], registro[2])
             )) for registro in result]))
-        
+        return Response(status_code=HTTP_406_NOT_ACCEPTABLE)
+    
+@gets.get("/sedes-productos/{id}/{idd}",tags=["Sedes-Productos"], response_model=SedesProductos)
+def verSedesProductos(id:int, idd:int):
+    with engine.connect() as conn:
+        result = conn.execute(sedes_productos.select().where(and_(sedes_productos.c.deleted_at == None, sedes_productos.c.id_sede == id, sedes_productos.c.id_producto == idd))).first()
+        if(result):return {'id_sede':result[0], 'id_producto':result[1], 'stock':result[2]}
         return Response(status_code=HTTP_406_NOT_ACCEPTABLE)
 #=======================================================PEDIDO-PRODUCTO================================================================
 

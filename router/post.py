@@ -37,13 +37,19 @@ def insertEmpleado(data: Empleado):
         conn.commit()
         return Response(status_code=HTTP_201_CREATED)
 #=======================================================PEDIDOS================================================================
-@posts.post("/pedido", tags=["Pedidos"], status_code=HTTP_201_CREATED)
+@posts.post("/pedido", tags=["Pedidos"])
 def insertPedido(data: Pedidos):
     with engine.connect() as conn:
+        resul=conn.execute(pedidos.select()).fetchall()
+        idMax=0
+        for res in resul: 
+            if idMax < res[0]: idMax=res[0]
         new_data=data.dict()
+        new_data['id_pedido']=idMax + 1
         conn.execute(pedidos.insert().values(new_data))
         conn.commit()
-        return Response(status_code=HTTP_201_CREATED)
+
+        return {"id_pedido":idMax+1}
     
 
 
