@@ -84,12 +84,11 @@ class CategoriaServicio(BaseModel):
 
 
 class Clientes(BaseModel):
-    id_cliente: Optional[int]
+    cc_cliente: Optional[str]
     nombre_cliente: str
     apellido_cliente: Optional[str]
     telefono_cliente: Optional[str]
     email_cliente: Optional[str]
-    cc_cliente: Optional[str]
     direccion_cliente: Optional[str]
     deleted_at: Optional[datetime]
 
@@ -109,7 +108,7 @@ class Factura(BaseModel):
     total: float
     codigo_factura: Optional[str]
     id_empleado: int
-    id_cliente: int
+    cc_cliente: Optional[str]
     id_sede: int
     deleted_at: Optional[datetime]
 
@@ -117,12 +116,12 @@ class ServicioVenta(BaseModel):
     id_factura: int
     id_servicio: int
     cantidad: int
-    subtotal: float
+    precio_venta: float
     deleted_at: Optional[datetime]
 
 class ProductoVenta(BaseModel):
     id_factura: int
     id_producto: int
     cantidad: int
-    subtotal: float
+    precio_venta: float
     deleted_at: Optional[datetime]

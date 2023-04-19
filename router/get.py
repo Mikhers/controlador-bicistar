@@ -1,4 +1,4 @@
-from sqlalchemy import and_
+from sqlalchemy import and_, select
 from fastapi import APIRouter, Response
 from starlette.status import HTTP_201_CREATED, HTTP_204_NO_CONTENT, HTTP_406_NOT_ACCEPTABLE
 from schema.schemaTablas import Sede, Proveedor, Pedidos, Empleado, CategoriaProducto, Productos, PedidoProducto, CategoriaServicio, Clientes, Servicios,SedesProductos, Factura, ServicioVenta,ProductoVenta
@@ -41,6 +41,11 @@ def allProveedores():
             ('id_proveedor', 'nombre_proveedor', 'direccion_proveedor', 'telefono_proveedor','email_proveedor'), 
             registro)) for registro in result]))
 
+@gets.get("/proveedores/{id}",tags=["Proveedores"], response_model=Proveedor)
+def getOneProveedor(id: int):
+    with engine.connect() as conn:
+        result = conn.execute(select(proveedor).where(and_(proveedor.c.deleted_at == None, proveedor.c.id_proveedor == id))).first()
+        return {'id_proveedor':result[0],'nombre_proveedor':result[1],'direccion_proveedor':result[2],'telefono_proveedor':result[3],'email_proveedor':result[4]}
 #=======================================================EMPLEADOS================================================================
 
 @gets.get("/empleados",tags=["Empleados"], response_model=List[Empleado])
@@ -76,7 +81,17 @@ def allPedidos(id:int):
         result = conn.execute(pedidos.select().where(and_(pedidos.c.deleted_at == None,pedidos.c.id_pedido == id))).first()
         return {'id_pedido':result[0], 'fecha_realizado':result[1].isoformat(), 'fecha_llegada':result[2].isoformat(), 
                 'estado_pedido':str(result[3]), 'total_pedido':float(result[4]), 'id_sede':result[5], 'id_proveedor':result[6], 'id_empleado':result[7]}
+
+@gets.get("/pedidos-sede/{id}",tags=["Pedidos"], response_model=List[Pedidos])
+def allPedidos(id:int):
+    with engine.connect() as conn:
+        result = conn.execute(pedidos.select().where(and_(pedidos.c.deleted_at == None,pedidos.c.id_sede == id))).fetchall()
+        return json.loads(json.dumps([dict(zip(
+            ('id_pedido', 'fecha_realizado', 'fecha_llegada', 'estado_pedido','total_pedido','id_sede','id_proveedor','id_empleado'),
+            (registro[0], registro[1].isoformat(), registro[2].isoformat(), str(registro[3]), float(registro[4]), registro[5], registro[6], registro[7])
+            )) for registro in result]))
     
+
 
 #=======================================================CATEGORIA-PRODUCTO================================================================
 
@@ -172,6 +187,11 @@ def allCategoriaServicio():
             ('id_categoria_servicio', 'nombre_servicio', 'descripcion_servicio'),
             registro)) for registro in result]))
 
+@gets.get("/categoria-servicio/{id}",tags=["Categoria-servicio"], response_model=CategoriaServicio)
+def verCategoriaServicio(id: int):
+    with engine.connect() as conn:
+        result = conn.execute(categoria_servicio.select().where(and_(categoria_servicio.c.deleted_at == None, categoria_servicio.c.id_categoria_servicio == id))).first()
+        return {'id_categoria_servicio':result[0],'nombre_servicio':result[1],'descripcion_servicio':result[2]}
 #=======================================================SERVICIOS================================================================
 
 @gets.get("/servicios",tags=["Servicios"], response_model=List[Servicios])
@@ -183,6 +203,11 @@ def allServicios():
             (registro[0], registro[1], registro[2], float(registro[3]), registro[4])
             )) for registro in result]))
 
+@gets.get("/servicios/{id}",tags=["Servicios"], response_model=Servicios)
+def verServicio(id: int):
+    with engine.connect() as conn:
+        result = conn.execute(servicios.select().where(and_(servicios.c.deleted_at == None, servicios.c.id_servicio == id))).first()
+        return {'id_servicio':result[0],'nombre_servicio':result[1],'descripcion_servicio':result[2], 'precio_servicio':result[3], 'id_categoria_servicio':result[4]}
 #=======================================================CLIENTES================================================================
 
 @gets.get("/clientes",tags=["Clientes"], response_model=List[Clientes])
@@ -190,10 +215,14 @@ def allClientes():
     with engine.connect() as conn:
         result = conn.execute(clientes.select().where(clientes.c.deleted_at == None)).fetchall()
         return json.loads(json.dumps([dict(zip(
-            ('id_cliente', 'nombre_cliente', 'apellido_cliente','telefono_cliente','email_cliente','cc_cliente','direccion_cliente'),
+            ('cc_cliente', 'nombre_cliente', 'apellido_cliente','telefono_cliente','email_cliente','direccion_cliente'),
             registro)) for registro in result]))
 
-
+@gets.get("/clientes/{id}",tags=["Clientes"], response_model=Clientes)
+def verClientes(id: str):
+    with engine.connect() as conn:
+        result = conn.execute(clientes.select().where(and_(clientes.c.deleted_at == None, clientes.c.cc_cliente == id))).first()
+        return {'cc_cliente':result[0],'nombre_cliente':result[1],'apellido_cliente':result[2], 'telefono_cliente':result[3], 'email_cliente':result[4],'direccion_cliente':result[5]}
 #=======================================================factura================================================================
 
 @gets.get("/facturas",tags=["Facturas"], response_model=List[Factura])
@@ -201,19 +230,24 @@ def allFactura():
     with engine.connect() as conn:
         result = conn.execute(factura.select().where(factura.c.deleted_at == None)).fetchall()
         return json.loads(json.dumps([dict(zip(
-            ('id_factura', 'fecha_factura', 'total','codigo_factura','id_empleado','id_cliente','id_sede'),
+            ('id_factura', 'fecha_factura', 'total','codigo_factura','id_empleado','cc_cliente','id_sede'),
             (registro[0], registro[1].isoformat(), float(registro[2]), registro[3],  registro[4], registro[5], registro[6])
             )) for registro in result]))
 
-@gets.get("/facturas/{id}",tags=["Facturas"], response_model=List[Factura])
+@gets.get("/facturas/{id}",tags=["Facturas"], response_model=Factura)
 def verFactura(id:int):
     with engine.connect() as conn:
-        result = conn.execute(factura.select().where(and_(factura.c.deleted_at == None, factura.c.id_factura == id))).fetchall()
+        result = conn.execute(factura.select().where(and_(factura.c.deleted_at == None, factura.c.id_factura == id))).first()
+        return {"id_factura":result[0],"fecha_factura":result[1],"total":result[2],"codigo_factura":result[3],"id_empleado":result[4],"cc_cliente":result[5],"id_sede":result[6]} 
+
+@gets.get("/facturas/sede/{id}",tags=["Facturas"], response_model=List[Factura])
+def verFactura(id:int):
+    with engine.connect() as conn:
+        result = conn.execute(factura.select().where(and_(factura.c.deleted_at == None, factura.c.id_sede == id))).fetchall()
         return json.loads(json.dumps([dict(zip(
-            ('id_factura', 'fecha_factura', 'total','codigo_factura','id_empleado','id_cliente','id_sede'),
+            ('id_factura', 'fecha_factura', 'total','codigo_factura','id_empleado','cc_cliente','id_sede'),
             (registro[0], registro[1].isoformat(), float(registro[2]), registro[3],  registro[4], registro[5], registro[6])
             )) for registro in result]))
-
 #=======================================================servicio_venta================================================================
 
 @gets.get("/servicio-venta",tags=["Servicio-Venta"], response_model=List[ServicioVenta])
@@ -221,7 +255,7 @@ def allfactura():
     with engine.connect() as conn:
         result = conn.execute(servicio_venta.select().where(servicio_venta.c.deleted_at == None)).fetchall()
         return json.loads(json.dumps([dict(zip(
-            ('id_factura', 'id_servicio', 'cantidad','subtotal'),
+            ('id_factura', 'id_servicio', 'cantidad','precio_venta'),
             (registro[0], registro[1], registro[2],float(registro[3]))
             )) for registro in result]))
 
@@ -230,7 +264,7 @@ def verServicioVenta(id:int):
     with engine.connect() as conn:
         result = conn.execute(servicio_venta.select().where(and_(servicio_venta.c.deleted_at == None, servicio_venta.c.id_factura == id))).fetchall()
         return json.loads(json.dumps([dict(zip(
-            ('id_factura', 'id_servicio', 'cantidad','subtotal'),
+            ('id_factura', 'id_servicio', 'cantidad','precio_venta'),
             (registro[0], registro[1], registro[2],float(registro[3]))
             )) for registro in result]))
 
@@ -241,7 +275,7 @@ def allfactura():
     with engine.connect() as conn:
         result = conn.execute(producto_venta.select().where(producto_venta.c.deleted_at == None)).fetchall()
         return json.loads(json.dumps([dict(zip(
-            ('id_factura', 'id_producto', 'cantidad','subtotal'),
+            ('id_factura', 'id_producto', 'cantidad','precio_venta'),
             (registro[0], registro[1], registro[2],float(registro[3]))
             )) for registro in result]))
 
@@ -250,7 +284,7 @@ def verProductoVenta(id:int):
     with engine.connect() as conn:
         result = conn.execute(producto_venta.select().where(and_(producto_venta.c.deleted_at == None, producto_venta.c.id_factura == id))).fetchall()
         return json.loads(json.dumps([dict(zip(
-            ('id_factura', 'id_producto', 'cantidad','subtotal'),
+            ('id_factura', 'id_producto', 'cantidad','precio_venta'),
             (registro[0], registro[1], registro[2],float(registro[3]))
             )) for registro in result]))
 

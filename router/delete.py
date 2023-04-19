@@ -77,6 +77,13 @@ def dropPedidoProducto(id: int, idd:int):
         conn.commit()
         return Response(status_code=HTTP_204_NO_CONTENT)
 
+@deletes.delete("/pedido-producto/{id}", status_code=HTTP_204_NO_CONTENT, tags=['Pedido-producto'])
+def dropPedidoProducto(id: int):
+    with engine.connect() as conn:
+        conn.execute(pedido_producto.delete().where(and_(pedido_producto.c.id_pedido == id)))
+        conn.commit()
+        return Response(status_code=HTTP_204_NO_CONTENT)
+
 #=======================================================CategoriaServicio================================================================
 @deletes.delete("/categoria-servicio/{id}", status_code=HTTP_204_NO_CONTENT, tags=['Categoria-servicio'])
 def dropCategoriaServicio(id: int):
@@ -95,9 +102,9 @@ def dropServicios(id: int):
 
 #=======================================================CLIENTES================================================================
 @deletes.delete("/cliente/{id}", status_code=HTTP_204_NO_CONTENT, tags=['Clientes'])
-def dropClientes(id: int):
+def dropClientes(id: str):
     with engine.connect() as conn:
-        conn.execute(clientes.update().values(deleted_at=datetime.now()).where(clientes.c.id_cliente == id))
+        conn.execute(clientes.update().values(deleted_at=datetime.now()).where(clientes.c.cc_cliente == id))
         conn.commit()
         return Response(status_code=HTTP_204_NO_CONTENT)
     

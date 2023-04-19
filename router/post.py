@@ -36,6 +36,7 @@ def insertEmpleado(data: Empleado):
         conn.execute(empleado.insert().values(new_data))
         conn.commit()
         return Response(status_code=HTTP_201_CREATED)
+
 #=======================================================PEDIDOS================================================================
 @posts.post("/pedido", tags=["Pedidos"])
 def insertPedido(data: Pedidos):
@@ -171,7 +172,7 @@ def codigoBarrasFactura(data: Factura):
         new_data = data.dict()
         result = conn.execute(factura.select()).fetchall()
         dicio = json.loads(json.dumps([dict(zip(
-            ('id_factura', 'fecha_factura', 'total','codigo_factura','id_empleado','id_cliente','id_sede'),
+            ('id_factura', 'fecha_factura', 'total','codigo_factura','id_empleado','cc_cliente','id_sede'),
             (registro[0], registro[1].isoformat(), float(registro[2]), registro[3],  registro[4], registro[5], registro[6])
             )) for registro in result]))
         max_id=0
@@ -212,13 +213,13 @@ def codigoBarrasFactura(data: Factura):
             new_data['codigo_factura'] = "9"+str(num)
         return new_data
 
-@posts.post("/factura", tags=["Facturas"], status_code=HTTP_201_CREATED)
+@posts.post("/factura", tags=["Facturas"],status_code=HTTP_201_CREATED)
 def insertfactura(data: Factura):
     with engine.connect() as conn:
         new_data = codigoBarrasFactura(data)
         conn.execute(factura.insert().values(new_data))
         conn.commit()
-        return Response(status_code=HTTP_201_CREATED)
+        return new_data["id_factura"]
     
 
 #=======================================================servicio_venta================================================================

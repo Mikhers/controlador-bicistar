@@ -176,11 +176,11 @@ def alterClientes(data: Clientes, id: int):
                                         cc_cliente=data.cc_cliente,
                                         direccion_cliente=data.direccion_cliente
                                             
-        ).where(clientes.c.id_cliente == id))
+        ).where(clientes.c.cc_cliente == id))
         conn.commit()
-        result = conn.execute(clientes.select().where(clientes.c.id_cliente == id)).first()
-        return {"id_cliente":result[0], "nombre_cliente":result[1], "apellido_cliente":result[2], "telefono_cliente":result[3],"email_cliente":result[4],
-                "cc_cliente":result[5],"direccion_cliente":result[6]}
+        result = conn.execute(clientes.select().where(clientes.c.cc_cliente == id)).first()
+        return {"cc_cliente":result[0], "nombre_cliente":result[1], "apellido_cliente":result[2], "telefono_cliente":result[3],"email_cliente":result[4],
+                "direccion_cliente":result[5]}
 
 
 # #=======================================================factura================================================================
@@ -192,14 +192,14 @@ def alterFactura(data: Factura, id: int):
                                     total=data.total,
                                     codigo_factura=data.codigo_factura,
                                     id_empleado=data.id_empleado,
-                                    id_cliente=data.id_cliente,
+                                    cc_cliente=data.cc_cliente,
                                     id_sede=data.id_sede
 
         ).where(factura.c.id_factura == id))
         conn.commit()
         result = conn.execute(factura.select().where(factura.c.id_factura == id)).first()
         return {"id_factura":result[0], "fecha_factura":result[1], "total":result[2], "codigo_factura":result[3],"id_empleado":result[4],
-                "id_cliente":result[5],"id_sede":result[6]}
+                "cc_cliente":result[5],"id_sede":result[6]}
     
 
 # #=======================================================Servicio-Venta================================================================

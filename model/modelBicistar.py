@@ -105,12 +105,11 @@ servicios = Table('servicios', meta_data,
 )
 
 clientes = Table('clientes', meta_data,
-                    Column('id_cliente', Integer, primary_key=True, autoincrement=True),
-                    Column('nombre_cliente', String(50), nullable=False),
+                    Column('cc_cliente', String(20), primary_key=True),
+                    Column('nombre_cliente', String(50)),
                     Column('apellido_cliente', String(50)),
                     Column('telefono_cliente', String(20)),
                     Column('email_cliente', String(255)),
-                    Column('cc_cliente', String(20)),
                     Column('direccion_cliente', String(100)),
                     Column('deleted_at', DateTime, default=null)
 
@@ -122,7 +121,7 @@ factura = Table('factura', meta_data,
                     Column('total', DECIMAL(10,2), nullable=False),
                     Column('codigo_factura', String(50), nullable=False),
                     Column('id_empleado', Integer, ForeignKey('empleado.id_empleado', ondelete='CASCADE', onupdate='CASCADE'), nullable=False),
-                    Column('id_cliente', Integer, ForeignKey('clientes.id_cliente', ondelete='CASCADE', onupdate='CASCADE'), nullable=False),
+                    Column('cc_cliente', String(20), ForeignKey('clientes.cc_cliente', ondelete='CASCADE', onupdate='CASCADE'), default=null),
                     Column('id_sede', Integer, ForeignKey('sede.id_sede', ondelete='CASCADE', onupdate='CASCADE'), nullable=False),
                     Column('deleted_at', DateTime, default=null)
 
@@ -132,7 +131,7 @@ servicio_venta = Table('servicio_venta', meta_data,
                     Column('id_factura', Integer, ForeignKey('factura.id_factura', ondelete='CASCADE', onupdate='CASCADE'),primary_key=True),
 	                Column('id_servicio', Integer, ForeignKey('servicio.id_servicio', ondelete='CASCADE', onupdate='CASCADE'),primary_key=True),
                     Column('cantidad', Integer, default=1),
-                    Column('subtotal', DECIMAL(10,2)),
+                    Column('precio_venta', DECIMAL(10,2)),
                     Column('deleted_at', DateTime, default=null)
 
 )
@@ -141,7 +140,7 @@ producto_venta = Table('producto_venta', meta_data,
                     Column('id_factura', Integer, ForeignKey('factura.id_factura', ondelete='CASCADE', onupdate='CASCADE'),primary_key=True),
 	                Column('id_producto', Integer,ForeignKey('productos.id_producto', ondelete='CASCADE', onupdate='CASCADE'), primary_key=True),
                     Column('cantidad', Integer,default=1),
-	                Column('subtotal', DECIMAL(10,2)),
+	                Column('precio_venta', DECIMAL(10,2)),
                     Column('deleted_at', DateTime, default=null)
 
 )
